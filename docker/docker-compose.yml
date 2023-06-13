@@ -1,0 +1,74 @@
+version: '3.7'
+
+services:
+  dev_vue:
+    tty: true
+    container_name: dev_vue
+    build:
+      context: ./vue
+      dockerfile: DockerFile
+    volumes:
+      - '../vue:/vue'
+    ports:
+      - 420:420
+    networks:
+      - nginx-reverse-proxy-manager_default
+      - dev_network
+  dev_laravel:
+    build:
+      context: ./laravel
+      dockerfile: DockerFile
+    container_name: dev_laravel
+    ports:
+    - 4200:4200
+    tty: true
+    working_dir: /var/www
+    volumes:
+        - ../laravel:/var/www
+    networks:
+      - nginx-reverse-proxy-manager_default
+      - dev_network
+  dev_mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: test123
+
+  #Nginx Service
+  # webserver:
+  #   image: nginx:alpine
+  #   container_name: dev_znws_com_nginx
+  #   restart: always
+  #   tty: true
+  #   ports:
+  #     - "8000:80"
+  #     - "4343:443"
+  #   volumes:
+  #     - ./:/var/www
+  #     - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+  #   networks:
+  #     - npm_network
+  #     - app-network
+
+  # phpmyadmin:
+  #   container_name: dev_znws_com_phpmyadmin
+  #   # depends_on:
+  #   #   - db
+  #   image: phpmyadmin/phpmyadmin
+  #   restart: always
+  #   ports:
+  #     - '8080:80'
+  #   environment:
+  #     PMA_HOST: 192.168.2.34
+  #     PMA_ABSOLUTE_URI: https://dev.znws.com/phpmyadmin/
+  #     # MYSQL_ROOT_PASSWORD: 123456 
+  #   networks:
+  #     - npm_network
+  #     - app-network
+networks:
+    dev_network:
+        driver: bridge
+    nginx-reverse-proxy-manager_default:
+        external: true
+        driver: bridge
