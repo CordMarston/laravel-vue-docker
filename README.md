@@ -1,1 +1,1 @@
-# laravel-vue-docker
+# Inventory Management System

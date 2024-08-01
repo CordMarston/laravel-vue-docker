@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+  // const method = $route.params.id;
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+    <RouterLink to="/auth/login">Login</RouterLink>
 </template>
